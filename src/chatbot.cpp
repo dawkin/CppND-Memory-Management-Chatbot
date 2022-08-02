@@ -45,6 +45,90 @@ ChatBot::~ChatBot()
 //// STUDENT CODE
 ////
 
+ChatBot::ChatBot(const ChatBot &source)
+{
+    std::cout << "ChatBot Copy Constructor" << std::endl;
+    // if the object to be copied  has a non nullptr to an image -> copy image to a new pointer
+    if (source._image){
+        _image = new wxBitmap(*source._image);
+    }else{
+        _image = nullptr;
+    }
+    // As these aren't owned by the ChaBot object we can simply copy the pointers
+    _currentNode = source._currentNode;
+    _rootNode = source._rootNode;
+    _chatLogic = source._chatLogic;
+}
+
+ChatBot &ChatBot::operator=(const ChatBot &source)
+{
+    std::cout << "ChatBot Copy Assignment Operator" << std::endl;
+
+    // return *this in case trying to copy an object on himself
+    if (this == &source)
+        return *this;
+    // If not nullptr _image must be deallocated before copy
+    if(_image) {
+        delete _image;
+        _image = nullptr;
+    }
+    // if the object to be copied  has a non nullptr to an image -> copy image to a new pointer
+    if (source._image)
+        _image = new wxBitmap(*source._image);
+
+    // As these aren't owned by the ChatBot object we can simply copy the pointers
+    _currentNode = source._currentNode;
+    _rootNode = source._rootNode;
+    _chatLogic = source._chatLogic;
+
+    return *this;
+}
+
+ChatBot::ChatBot(ChatBot &&source)
+{
+    std::cout << "ChatBot Move Constructor" << std::endl;
+    // assigning source pointer to new object
+    _image = source._image;
+    _currentNode = source._currentNode;
+    _rootNode = source._rootNode;
+    _chatLogic = source._chatLogic;
+
+    // Setting source pointer to nullptr
+    source._image = nullptr;
+    source._currentNode = nullptr;
+    source._rootNode = nullptr;
+    source._chatLogic = nullptr;
+}
+
+ChatBot &ChatBot::operator=(ChatBot &&source)
+{
+
+    std::cout << "ChatBot Move assignment operator" << std::endl;
+    // return *this in case trying to move an object on himself
+    if (this == &source)
+        return *this;
+
+    // If not nullptr _image must be deallocated before move
+    if(_image)
+        delete _image;
+
+    // assigning source pointer to new object
+    _image = source._image;
+    _currentNode = source._currentNode;
+    _rootNode = source._rootNode;
+    _chatLogic = source._chatLogic;
+
+    _chatLogic->SetChatbotHandle(this);
+
+    // Setting source pointer to nullptr
+    source._image = nullptr;
+    source._currentNode = nullptr;
+    source._rootNode = nullptr;
+    source._chatLogic = nullptr;
+
+    return *this;
+}
+
 ////
 //// EOF STUDENT CODE
 
